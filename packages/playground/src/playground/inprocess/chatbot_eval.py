@@ -26,6 +26,7 @@ from playground.types import PlaygroundConfig
 _SIDECAR_TASK_PATHS = {
     "finance_openbb": "application/tasks/chat_openbb",
     "medical_assistant": "application/tasks/chat_multi-agent-medical-assistant",
+    "anxiety_support": "application/tasks/chat_synthetic-anxiety-support",
     "meal_planning_nutrition": "application/tasks/chat_meal-planning-nutrition",
     "prescreening_assistant": "application/tasks/chat_prescreening-01-diabetes",
 }
@@ -103,6 +104,16 @@ def _application_for(application_id: str) -> Any:
                 "CHATBOT_UPSTREAM_MEDICAL",
                 "MEDICAL_CHATBOT_URL",
                 "http://127.0.0.1:8902",
+            ),
+        )
+    if application_id == "anxiety_support":
+        return HTTPChatbotApplication(
+            application_id="anxiety_support",
+            default_context="mental_health_support",
+            base_url=_sidecar_base_url(
+                "CHATBOT_UPSTREAM_ANXIETY",
+                "ANXIETY_CHATBOT_URL",
+                "http://127.0.0.1:8905",
             ),
         )
     if application_id == "meal_planning_nutrition":
@@ -196,6 +207,7 @@ class HTTPChatbotApplication:
             upstream_hint = {
                 "finance_openbb": "CHATBOT_UPSTREAM_FINANCE",
                 "medical_assistant": "CHATBOT_UPSTREAM_MEDICAL",
+                "anxiety_support": "CHATBOT_UPSTREAM_ANXIETY",
                 "meal_planning_nutrition": "CHATBOT_API_URL",
                 "prescreening_assistant": "CHATBOT_UPSTREAM_PRESCREENING",
             }.get(self.application_id, "CHATBOT_API_URL")
