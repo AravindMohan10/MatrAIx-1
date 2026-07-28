@@ -98,6 +98,19 @@ APPLICATION_TASK_METADATA: dict[str, dict[str, object]] = {
             "multi turn chat",
         ],
     },
+    "chat_synthetic-depression-support": {
+        "type": "chatbot",
+        "domain": DOMAIN_HEALTHCARE,
+        "tags": [
+            "mental health",
+            "depression support",
+            "synthetic chatbot",
+            "PHQ-9",
+            "safe messaging",
+            "crisis detection",
+            "multi turn chat",
+        ],
+    },
     "chat_meal-planning-nutrition": {
         "type": "chatbot",
         "domain": DOMAIN_HEALTHCARE,

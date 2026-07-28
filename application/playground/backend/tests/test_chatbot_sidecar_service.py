@@ -17,6 +17,7 @@ def test_resolve_health_url_defaults(monkeypatch: pytest.MonkeyPatch) -> None:
     assert svc.resolve_health_url("recai") == "http://127.0.0.1:8000"
     assert svc.resolve_health_url("finance_openbb") == "http://127.0.0.1:8901"
     assert svc.resolve_health_url("medical_assistant") == "http://127.0.0.1:8902"
+    assert svc.resolve_health_url("depression_support") == "http://127.0.0.1:8906"
     assert svc.resolve_health_url("acme_support_mcp") == "http://127.0.0.1:8903"
     assert svc.resolve_health_url("meal_planning_nutrition") == "http://127.0.0.1:8905"
     assert svc.resolve_health_url("deeptutor") == "http://127.0.0.1:8906"
@@ -35,6 +36,7 @@ def test_list_sidecar_statuses(monkeypatch: pytest.MonkeyPatch) -> None:
         "recai",
         "finance_openbb",
         "medical_assistant",
+        "depression_support",
         "acme_support_api",
         "acme_support_mcp",
         "meal_planning_nutrition",
@@ -46,6 +48,7 @@ def test_list_sidecar_statuses(monkeypatch: pytest.MonkeyPatch) -> None:
     assert by_id["recai"]["canStart"] is True
     assert by_id["finance_openbb"]["canStart"] is True
     assert by_id["medical_assistant"]["canStart"] is True
+    assert by_id["depression_support"]["canStart"] is True
     assert by_id["acme_support_api"]["canStart"] is True
     assert by_id["acme_support_mcp"]["canStart"] is True
     assert by_id["meal_planning_nutrition"]["canStart"] is True

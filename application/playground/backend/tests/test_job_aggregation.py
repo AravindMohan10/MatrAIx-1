@@ -6,6 +6,7 @@ from pathlib import Path
 from backend.service.job_aggregation import (
     SUMMARY_LLM_BUCKET_CHUNK,
     _execute_summary_llm,
+    _prose_theme_summary,
     build_job_aggregation,
     job_aggregation_artifact_is_fresh,
     read_job_aggregation_artifact,
@@ -87,7 +88,7 @@ def test_build_job_aggregation_groups_text_by_categorical_directive(tmp_path: Pa
     _write_trial(job_dir, "trial-1", payload_yes)
     _write_trial(job_dir, "trial-2", payload_no)
 
-    aggregation = build_job_aggregation(job_dir)
+    aggregation = build_job_aggregation(job_dir, enable_llm=False)
 
     assert aggregation is not None
     contexts = aggregation["contexts"]
@@ -139,7 +140,7 @@ def test_build_job_aggregation_groups_text_by_numeric_band_directive(tmp_path: P
             },
         )
 
-    aggregation = build_job_aggregation(job_dir)
+    aggregation = build_job_aggregation(job_dir, enable_llm=False)
 
     assert aggregation is not None
     summaries = aggregation["contexts"][0]["summaries"]
@@ -218,7 +219,7 @@ def test_build_job_aggregation_reads_task_reporting_config(tmp_path: Path) -> No
         encoding="utf-8",
     )
 
-    aggregation = build_job_aggregation(job_dir, repo_root=repo_root)
+    aggregation = build_job_aggregation(job_dir, repo_root=repo_root, enable_llm=False)
 
     assert aggregation is not None
     summaries = aggregation["contexts"][0]["summaries"]
@@ -351,7 +352,7 @@ def test_build_job_aggregation_synthesizes_user_feedback_context(tmp_path: Path)
         encoding="utf-8",
     )
 
-    aggregation = build_job_aggregation(job_dir, repo_root=repo_root)
+    aggregation = build_job_aggregation(job_dir, repo_root=repo_root, enable_llm=False)
 
     assert aggregation is not None
     feedback_context = next(
@@ -401,7 +402,7 @@ def test_yaml_yes_no_choices_not_boolified(tmp_path: Path) -> None:
         },
     )
 
-    aggregation = build_job_aggregation(job_dir, repo_root=repo_root)
+    aggregation = build_job_aggregation(job_dir, repo_root=repo_root, enable_llm=False)
     assert aggregation is not None
     feedback = next(
         context
@@ -621,7 +622,7 @@ def test_build_job_aggregation_emits_judge_units(tmp_path: Path) -> None:
         },
     )
 
-    aggregation = build_job_aggregation(job_dir)
+    aggregation = build_job_aggregation(job_dir, enable_llm=False)
 
     assert aggregation is not None
     judges = aggregation["contexts"][0]["judges"]
@@ -1373,7 +1374,9 @@ def test_aggregate_textual_clusters_near_duplicate_free_text(tmp_path: Path) -> 
     assert facet["kind"] == "textual"
     textual = facet["textual"]
     assert textual["count"] == 6
-    assert 2 <= textual["uniqueCount"] <= 4
+    assert textual["uniqueCount"] == 4
+    assert textual["themeCount"] == len(textual["counts"])
+    assert len(textual["samples"]) == 4
     assert sum(row["count"] for row in textual["counts"]) == 6
     # Near-duplicate unit-test answers should land in one theme.
     unit_theme = next(row for row in textual["counts"] if "unit test" in row["value"].lower())
@@ -1384,6 +1387,16 @@ def test_aggregate_textual_clusters_near_duplicate_free_text(tmp_path: Path) -> 
     other = next(row for row in textual["counts"] if "completely different" in row["value"].lower())
     assert other["count"] == 1
     assert "theme" in textual["summary"].lower()
+
+
+def test_theme_summary_does_not_equate_one_cluster_with_identical_answers() -> None:
+    summary = _prose_theme_summary(
+        6,
+        [{"value": "A representative response", "count": 6, "samples": []}],
+        distinct_count=6,
+    )
+
+    assert summary == "Across 6 answers, 6 distinct responses share one broad theme."
 
 
 def test_execute_summary_llm_chunks_high_cardinality_buckets() -> None:
