@@ -68,7 +68,7 @@ _SIDECAR_SPECS: dict[str, SidecarSpec] = {
         ),
         service_name="anxiety-chatbot",
         build_context="anxiety-chatbot",
-        host_port=8905,
+        host_port=8907,
         primary_env="CHATBOT_UPSTREAM_ANXIETY",
         legacy_env="ANXIETY_CHATBOT_URL",
     ),

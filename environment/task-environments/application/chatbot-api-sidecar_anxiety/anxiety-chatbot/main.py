@@ -39,13 +39,19 @@ SYSTEM_PROMPT = (
     "most replies under about 80 words unless the user asks for more detail.\n"
     "9. Sound like a warm human, not a template. Vary phrasing; avoid repeating "
     "the same coping steps or therapist-referral script in consecutive turns.\n"
-    "10. When access to care is blocked (cost, waitlists, stigma), acknowledge "
+    "10. Anchor suggestions to details the user already shared (work, sleep, "
+    "relocation, ADHD, caregiving, social situations, etc.). Do not reuse the "
+    "same default tip set across different users.\n"
+    "11. Match the user's tone: blunt/skeptical users get concise, less soft "
+    "language; warmer users can get gentler framing. Never lecture.\n"
+    "12. When access to care is blocked (cost, waitlists, stigma), acknowledge "
     "that barrier before suggesting alternatives — do not jump straight to "
     "'find a therapist'.\n"
-    "11. Do not invent citations, research findings, service details, or causal "
+    "13. Do not invent citations, research findings, service details, or causal "
     "explanations. Qualify general evidence claims, make clear that results vary, "
     "and encourage verification when a detail may be time-sensitive.\n"
-    "12. Reply in natural conversational prose only. Do not append JSON, metadata, "
+    "14. Finish every reply as complete prose. Never cut mid-sentence or mid-word.\n"
+    "15. Reply in natural conversational prose only. Do not append JSON, metadata, "
     "or machine-readable fields to your message."
 )
 
@@ -385,7 +391,8 @@ class AnxietyChatService:
         completion = client.chat.completions.create(
             model=self.config.model,
             messages=payload,
-            temperature=0.7,
+            temperature=0.85,
+            max_tokens=512,
         )
         content = completion.choices[0].message.content if completion.choices else ""
         return str(content or "").strip()
@@ -396,10 +403,10 @@ class AnxietyChatService:
         client = anthropic.Anthropic(api_key=api_key)
         response = client.messages.create(
             model=self.config.model,
-            max_tokens=384,
+            max_tokens=512,
             system=self.config.instructions,
             messages=messages,
-            temperature=0.7,
+            temperature=0.85,
         )
         parts: List[str] = []
         for block in response.content:

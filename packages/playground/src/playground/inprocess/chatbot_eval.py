@@ -113,7 +113,7 @@ def _application_for(application_id: str) -> Any:
             base_url=_sidecar_base_url(
                 "CHATBOT_UPSTREAM_ANXIETY",
                 "ANXIETY_CHATBOT_URL",
-                "http://127.0.0.1:8905",
+                "http://127.0.0.1:8907",
             ),
         )
     if application_id == "meal_planning_nutrition":

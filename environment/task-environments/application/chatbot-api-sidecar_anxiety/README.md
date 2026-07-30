@@ -23,7 +23,7 @@ is unset, the sidecar picks the provider default (`qwen-plus`, `gpt-4o-mini`, or
 cd environment/task-environments/application/chatbot-api-sidecar_anxiety
 export QWEN_API_KEY=your-key
 docker compose -f standalone-compose.yaml up --build
-curl http://127.0.0.1:8905/health
+curl http://127.0.0.1:8907/health
 ```
 
 For international DashScope keys (`sk-ws-*`):

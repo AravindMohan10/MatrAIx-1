@@ -15,7 +15,7 @@ services:
       DASHSCOPE_API_BASE: ${DASHSCOPE_API_BASE:-}
       PYTHONUNBUFFERED: "1"
     ports:
-      - "8905:8000"
+      - "8907:8000"
     healthcheck:
       test:
         [

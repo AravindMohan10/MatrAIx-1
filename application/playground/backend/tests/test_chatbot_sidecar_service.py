@@ -12,12 +12,14 @@ from backend.service import chatbot_sidecar_service as svc
 def test_resolve_health_url_defaults(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.delenv("CHATBOT_API_URL", raising=False)
     monkeypatch.delenv("CHATBOT_MCP_URL", raising=False)
+    monkeypatch.delenv("CHATBOT_UPSTREAM_ANXIETY", raising=False)
+    monkeypatch.delenv("ANXIETY_CHATBOT_URL", raising=False)
     monkeypatch.delenv("CHATBOT_UPSTREAM_PRESCREENING", raising=False)
     monkeypatch.delenv("PRESCREENING_CHATBOT_URL", raising=False)
     assert svc.resolve_health_url("recai") == "http://127.0.0.1:8000"
     assert svc.resolve_health_url("finance_openbb") == "http://127.0.0.1:8901"
     assert svc.resolve_health_url("medical_assistant") == "http://127.0.0.1:8902"
-    assert svc.resolve_health_url("anxiety_support") == "http://127.0.0.1:8905"
+    assert svc.resolve_health_url("anxiety_support") == "http://127.0.0.1:8907"
     assert svc.resolve_health_url("acme_support_mcp") == "http://127.0.0.1:8903"
     assert svc.resolve_health_url("meal_planning_nutrition") == "http://127.0.0.1:8905"
     assert svc.resolve_health_url("deeptutor") == "http://127.0.0.1:8906"

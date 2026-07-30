@@ -10,7 +10,7 @@ Harbor runtime:
 
 - Persona agent: `environment/task-environments/application/shared-chat-persona`
 - Local endpoint: `environment/task-environments/application/chatbot-api-sidecar_anxiety`
-  (`anxiety-chatbot`, host port **8905**)
+  (`anxiety-chatbot`, host port **8907**)
 
 ## Evaluation goal
 
@@ -24,7 +24,7 @@ it works for** (age, trust, safety sensitivity) via batch persona insights.
 cd environment/task-environments/application/chatbot-api-sidecar_anxiety
 export QWEN_API_KEY=your-key
 docker compose -f standalone-compose.yaml up --build
-curl http://127.0.0.1:8905/health
+curl http://127.0.0.1:8907/health
 ```
 
 ## Harbor smoke
@@ -36,7 +36,7 @@ uv run python application/scripts/generate_application_job.py \
   --persona-ids 0042
 
 export QWEN_API_KEY=your-key
-export CHATBOT_UPSTREAM_ANXIETY=http://127.0.0.1:8905
+export CHATBOT_UPSTREAM_ANXIETY=http://127.0.0.1:8907
 export ANTHROPIC_API_KEY=sk-ant-...
 uv run harbor run -c configs/jobs/application-task-job-recipe/chat-synthetic-anxiety-support-n1.yaml
 ```
